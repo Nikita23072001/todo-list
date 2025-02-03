@@ -8,16 +8,17 @@
 }
 
 .todo-container {
-  max-width: 500px;
+  width: 90%;
+  max-width: 600px;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
 h2 {
-  font-size: 22px;
+  font-size: 24px;
   color: #333;
   margin-bottom: 15px;
 }
@@ -25,14 +26,15 @@ h2 {
 .todo-list {
   padding: 0;
   margin: 0;
+  list-style: none;
 }
 
 .todo-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
 }
 
 .todo-item:last-child {
@@ -41,26 +43,78 @@ h2 {
 
 .todo-item span {
   font-size: 16px;
-  flex-grow: 1;
-  text-align: left;
+  color: #333;
+  font-weight: 500;
 }
 
-.completed {
-  text-decoration: line-through;
-  color: #777;
+.dates {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
 }
 
 .button-group {
   display: flex;
-  gap: 8px;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.complete-btn {
+  background-color: #333;
+  color: white;
+}
+
+.complete-btn:hover {
+  background-color: #555;
+}
+
+.remove-btn {
+  background-color: #d9534f;
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: #c9302c;
 }
 
 .input-group {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  margin-top: 20px;
+  width: 100%;
 }
 
 #todo-input {
   flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.add-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}
+.completed {
+  text-decoration: line-through;
+  color: #777;
 }
