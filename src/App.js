@@ -1,7 +1,7 @@
 import logo from './logo.svg';
+import './App.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import './App.css';
 import React, { act, useState, useEffect } from 'react';
 import { Button, TextInput, ListItem, UnorderedList, Tile } from '@carbon/react';
 import '@carbon/styles/css/styles.css';
@@ -35,8 +35,9 @@ function App() {
     { text: 'Stworzyć pierwszą aplikacje', isCompleted: false, actualDate: new Date(), dueDate: new Date(new Date().setDate(new Date().getDate() + 7)), completionDate: null },
     { text: 'Zaliczyć przedmiot', isCompleted: false, actualDate: new Date(), dueDate: new Date(new Date().setDate(new Date().getDate() + 7)), completionDate: null }
   ]);
-
+  
   const [value, setValue] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,24 +51,29 @@ function App() {
     const newTodo = {
       text: value,
       isCompleted: false,
-      actualDate: new Date(),
-      dueDate: new Date(new Date().setDate(new Date().getDate() + 7)), // 7 days from now
+      actualDate: selectedDate,
+      dueDate: new Date(new Date(selectedDate).setDate(new Date(selectedDate).getDate() + 7)),
       completionDate: null
     };
     setTodos([...todos, newTodo]);
     setValue('');
   };
 
-  const completeTodo = index => {
-    const newTodos = [...todos];
-    newTodos[index].isCompleted = !newTodos[index].isCompleted;
-    newTodos[index].completionDate = newTodos[index].isCompleted ? new Date() : null;
-    setTodos(newTodos);
+  const completeTodo = (todoToComplete) => {
+    setTodos(todos.map(todo =>
+      todo.text === todoToComplete.text && todo.actualDate.toDateString() === todoToComplete.actualDate.toDateString()
+        ? { ...todo, isCompleted: !todo.isCompleted, completionDate: todo.isCompleted ? null : new Date() }
+        : todo
+    ));
   };
+  
 
-  const removeTodo = index => {
-    setTodos(todos.filter((_, i) => i !== index));
+  const removeTodo = (todoToRemove) => {
+    setTodos(todos.filter(todo =>
+      !(todo.text === todoToRemove.text && todo.actualDate.toDateString() === todoToRemove.actualDate.toDateString())
+    ));
   };
+  
 
   const calculateRemainingTime = dueDate => {
     const now = new Date();
@@ -85,10 +91,14 @@ function App() {
 
   return (
     <div className="app">
+      <nav className="navbar">
+        <h1>To-Do List</h1>
+        <Calendar onChange={setSelectedDate} value={selectedDate} />
+      </nav>
       <Tile className="todo-container">
-        <h2>To-Do List</h2>
+        <h2>To-Do List for {selectedDate.toLocaleDateString()}</h2>
         <UnorderedList className="todo-list">
-          {todos.map((todo, index) => (
+          {todos.filter(todo => todo.actualDate.toDateString() === selectedDate.toDateString()).map((todo, index) => (
             <ListItem key={index} className="todo-item">
               <span className={todo.isCompleted ? 'completed' : ''}>{todo.text}</span>
               <div className="dates" style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -99,10 +109,12 @@ function App() {
                 </span>
               </div>
               <div className="button-group">
-                <Button kind="secondary" size="sm" onClick={() => completeTodo(index)}>
-                  {todo.isCompleted ? 'Undo' : 'Complete'}
-                </Button>
-                <Button kind="danger" size="sm" onClick={() => removeTodo(index)}>Remove</Button>
+              <Button kind="secondary" size="sm" onClick={() => completeTodo(todo)}>
+                {todo.isCompleted ? 'Undo' : 'Complete'}
+              </Button>
+              <Button kind="danger" size="sm" onClick={() => removeTodo(todo)}>
+                Remove
+              </Button>
               </div>
             </ListItem>
           ))}
